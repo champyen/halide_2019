@@ -1,0 +1,18 @@
+CXX=/opt/android-ndk-r20b/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang++
+HALIDE_DISTRIB=~/Halide/build/distrib
+GENERATOR=./mm_generator
+CXX_FLAGS=-fno-rtti -std=c++11 -I $(HALIDE_DISTRIB)/include/ -I $(HALIDE_DISTRIB)/tools -L $(HALIDE_DISTRIB)/bin/
+CXX_LIBS=-ldl -llog
+
+all: mm_int_hvx
+
+#mm_hvx: mm.cpp aot/halide_mm.a aot/halide_mm.h
+#	LD_LIBRARY_PATH=$(HALIDE_DISTRIB)/bin/ $(GENERATOR) -g halide_mm -o ./aot_hvx MA.type=float32 MB.type=float32 output.type=float32 auto_schedule=false target=arm-64-android-hvx_128
+#	$(CXX) $(CXX_FLAGS) -D_HALIDE_HVX_ -I aot_hvx -o mm_hvx mm_hvx.cpp aot_hvx/halide_mm.a  $(CXX_LIBS)
+
+mm_int_hvx: mm_int.cpp aot_int/halide_mm.a aot_int/halide_mm.h
+	LD_LIBRARY_PATH=$(HALIDE_DISTRIB)/bin/ $(GENERATOR) -g halide_mm -o ./aot_int_hvx MA.type=uint8 MB.type=uint8 output.type=uint32 auto_schedule=false target=arm-64-android-hvx_128
+	$(CXX) $(CXX_FLAGS) -I aot_int_hvx -o mm_int_hvx mm_int_hvx.cpp aot_int_hvx/halide_mm.a  $(CXX_LIBS)
+
+clean:
+	rm -f mm_int_hvx aot_int_hvx/*
