@@ -71,6 +71,10 @@ int main(void)
 		}
 	}
 
+	free(ma);
+	free(mb);
+	free(mc);
+	free(chk);
 	printf("DONE!\n");
 	return 0;
 }
