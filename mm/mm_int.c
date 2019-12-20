@@ -9,7 +9,7 @@
 #define TEST_N 512
 
 #include "arm_neon.h"
-void gemm4x4_vec(uint8_t *a, int32_t sa, uint8_t *b, int32_t sb, uint32_t *c, int32_t sc)
+void gemm8x8_vec(uint8_t *a, int32_t sa, uint8_t *b, int32_t sb, uint32_t *c, int32_t sc)
 {
 }
 
@@ -41,10 +41,10 @@ int main(void)
 	gettimeofday(&stime, NULL);
 
     //parallel here
-	for(int m = 0; m < TEST_M; m+=4){
-		for(int n = 0; n < TEST_N; n+=4){
-			for(int k = 0; k < TEST_K; k+=4){
-				gemm4x4_vec(
+	for(int m = 0; m < TEST_M; m+=8){
+		for(int n = 0; n < TEST_N; n+=8){
+			for(int k = 0; k < TEST_K; k+=8){
+				gemm8x8_vec(
 							ma + m*TEST_K + k, TEST_K,
 							mb + k*TEST_N + n, TEST_N,
 							mc + m*TEST_N + n, TEST_N
